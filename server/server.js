@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 
-const client = new MercadoPagoConfig({ accessToken: 'YOUR_ACCESS_TOKEN' });
+const client = new MercadoPagoConfig({ accessToken: 'APP_USR-4601217555622384-022714-e45485709db913d53139f5dc5f4aa41b-1703330054' });
 
 const app = express();
 const port = 3000;
@@ -22,7 +22,7 @@ app.post("/create_preferences", async (req,res)=>{
                     quantity : Number(req.body.quantity),
                     unit_price : Number(req.body.price),
                     currency_price : "ARS"
-                },
+                }
             ],
             back_urls : {
                 success : "https://www.youtube.com/watch?v=vEXwN9-tKcs&t=2782s",
