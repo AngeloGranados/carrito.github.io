@@ -1,58 +1,52 @@
-const express = require("express");
+import express from "express";
+import cors from "cors";
+import { MercadoPagoConfig, Preference } from 'mercadopago';
+
+const client = new MercadoPagoConfig({ accessToken: 'YOUR_ACCESS_TOKEN' });
+
 const app = express();
-const cors = require("cors");
-const mercadopago = require("mercadopago");
+const port = 3000;
 
-// REPLACE WITH YOUR ACCESS TOKEN AVAILABLE IN: https://developers.mercadopago.com/panel
-mercadopago.configure({
-	access_token: "<ACCESS_TOKEN>",
-});
-
-
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
-app.use(express.static("../index.html"));
 app.use(cors());
-app.get("/", function (req, res) {
-	res.status(200).sendFile("index.html");
+app.use(express.json());
+
+app.get("/", (req,res)=>{
+    res.send("server");
 });
 
-app.post("/create_preference", (req, res) => {
+app.post("/create_preferences", async (req,res)=>{
+    try{
+        const body = {
+            items : [{
+                    title : req.body.title,
+                    quantity : Number(req.body.quantity),
+                    unit_price : Number(req.body.price),
+                    currency_price : "ARS"
+                },
+            ],
+            back_urls : {
+                success : "https://www.youtube.com/watch?v=vEXwN9-tKcs&t=2782s",
+                failure : "https://www.youtube.com/watch?v=vEXwN9-tKcs&t=2782s",
+                pending : "https://www.youtube.com/watch?v=vEXwN9-tKcs&t=2782s",
+            },
+            auto_retun : 'approved'
+        };
 
-	let preference = {
-		items: [
-			{
-				title: req.body.description,
-				unit_price: Number(req.body.price),
-				quantity: Number(req.body.quantity),
-			}
-		],
-		back_urls: {
-			"success": "http://localhost:8080",
-			"failure": "http://localhost:8080",
-			"pending": ""
-		},
-		auto_return: "approved",
-	};
+        const preference = new Preference(client);
 
-	mercadopago.preferences.create(preference)
-		.then(function (response) {
-			res.json({
-				id: response.body.id
-			});
-		}).catch(function (error) {
-			console.log(error);
-		});
+        const result = await preference.create({body});
+        res.json({
+            id : result.id,
+        });
+
+    }catch(error) {
+        console.log(error);
+        res.status(500).json({
+            error : "error preferences"
+        });
+    }
 });
 
-app.get('/feedback', function (req, res) {
-	res.json({
-		Payment: req.query.payment_id,
-		Status: req.query.status,
-		MerchantOrder: req.query.merchant_order_id
-	});
-});
-
-app.listen(8080, () => {
-	console.log("The server is now running on Port 8080");
+app.listen(port, ()=>{
+    console.log("El server esta corriendo");
 });
