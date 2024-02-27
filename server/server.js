@@ -15,15 +15,10 @@ app.get("/", (req,res)=>{
 });
 
 app.post("/create_preferences", async (req,res)=>{
+    console.log(req.body.allproducts);
     try{
         const body = {
-            items : [{
-                    title : req.body.title,
-                    quantity : Number(req.body.quantity),
-                    unit_price : Number(req.body.price),
-                    currency_price : "ARS"
-                }
-            ],
+            items : req.body.allproducts,
             back_urls : {
                 success : "https://www.youtube.com/watch?v=vEXwN9-tKcs&t=2782s",
                 failure : "https://www.youtube.com/watch?v=vEXwN9-tKcs&t=2782s",

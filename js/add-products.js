@@ -7,19 +7,20 @@ let allproducts = [];
 Array.from(btnaddproducts).forEach(btn => {
     btn.onclick = (e) => {
         e.preventDefault();
-        let titleproduc = e.target.parentElement.querySelector("h3").innerText;
-        let priceproduct = e.target.parentElement.querySelector("p").innerText;
+        let title = e.target.parentElement.querySelector("h3").innerText;
+        let unit_price = e.target.parentElement.querySelector("p").innerText;
 
         let product = {
-            productcant : 1,
-            titleproduct : titleproduc,
-            priceproduct : priceproduct
+            title : title,
+            quantity : 1,
+            unit_price : parseInt(unit_price),
+            currency_price : "ARS"
         }
 
-        if(allproducts.some(pro=>pro.titleproduct === titleproduc)){
+        if(allproducts.some(pro=>pro.title === title)){
             const newproduct = allproducts.map(product=>{
-                if(product.titleproduct === titleproduc){
-                    product.productcant++;
+                if(product.title === title){
+                    product.quantity++;
 
                     return product;
                 }else{
@@ -58,11 +59,11 @@ const showhtml = (allproducts = []) => {
         let divproduct = document.createElement("div");
         divproduct.className = "product";
 
-        subtotal = parseInt(product.priceproduct) * product.productcant;
+        subtotal = parseInt(product.unit_price) * product.quantity;
 
         divproduct.innerHTML = `
-            <div class='product-cant'>${product.productcant}</div>
-            <p class='product-title'>${product.titleproduct}</p>
+            <div class='product-cant'>${product.quantity}</div>
+            <p class='product-title'>${product.title}</p>
             <div class='product-price'>$${subtotal}</div>
             <button class="btn-cerrar"><i class="fa-solid fa-x"></i></button>
             `;
@@ -80,7 +81,7 @@ const showhtml = (allproducts = []) => {
 productstorebody.addEventListener("click", (e)=>{
 
     if(e.target.parentElement.classList.contains("btn-cerrar")){
-        allproducts = allproducts.filter(product => product.titleproduct !== e.target.parentElement.parentElement.querySelector("p").innerText);
+        allproducts = allproducts.filter(product => product.title !== e.target.parentElement.parentElement.querySelector("p").innerText);
 
         showhtml(allproducts);
     }
