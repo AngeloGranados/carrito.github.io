@@ -8,7 +8,7 @@ const mp = new MercadoPago('APP_USR-962f8616-b5c9-4f28-91a1-bbb0c16c03ce', {
 btncompra.addEventListener("click", async ()=>{
 
     try{
-        let res = await fetch("http://localhost:3000/create_preferences", {
+        let res = await fetch("https://apicarrito.onrender.com/create_preferences", {
             method  : "POST",
             headers : {
                 "Content-Type" : "application/json"
